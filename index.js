@@ -1,41 +1,86 @@
-window.setInterval(NextImg, 5000);
+var timer = window.setInterval(nextImg, 5000);
 
-function NextImg() {
-  const img = document.getElementById("img");
-  const style = window.getComputedStyle(img, false);
-  const backgroundImg = style.backgroundImage;
-  const imgNumber = getImageNumber(backgroundImg);
-  const nextImg = imgNumber + 1;
+const nextButton = document.getElementById('next');
+nextButton.addEventListener('click', () => {
+  nextImg();
+  restartTime();
+});
+
+const backButton = document.getElementById('back');
+backButton.addEventListener('click', () => {
+  previousImg();
+  restartTime();
+});
+
+function nextImg() {
+  const img = getImage();
+  const nextImg = img.id + 1;
 
   if (nextImg < 5) {
-    img.style.backgroundImage = `url(img/${nextImg}.jpg)`;
+    img.element.style.backgroundImage = `url(img/${nextImg}.jpg)`;
   }
   else {
-    img.style.backgroundImage = `url(img/0.jpg)`
+    img.element.style.backgroundImage = `url(img/0.jpg)`
   }
-  changeControlPosition(nextImg);
+
+  changeControlPosition(nextImg, nextImg - 1);
 }
 
-function getImageNumber(url) {
+function previousImg() {
+  const img = getImage();
+  const previousImg = img.id - 1;
+
+  if (previousImg >= 0) {
+    img.element.style.backgroundImage = `url(img/${previousImg}.jpg)`;
+  }
+  else {
+    img.element.style.backgroundImage = `url(img/4.jpg)`
+  }
+
+  changeControlPosition(previousImg, previousImg + 1);
+}
+
+function getImage() {
+  const imgElement = document.getElementById("img");
+  const style = window.getComputedStyle(img, false);
+  const backgroundImg = style.backgroundImage;
+  const imgIndex = getImageIndex(backgroundImg);
+
+  return image = {
+    element: imgElement,
+    id: imgIndex
+  }
+}
+
+function getImageIndex(url) {
   const imgPosition = url.search('[0-9].jpg') || url.search('[0-9].png');
   const imgNumberString = url.charAt(imgPosition);
-  const imgNumber = parseInt(imgNumberString, 10);
-  return imgNumber;
+  const imgIndex = parseInt(imgNumberString, 10);
+  return imgIndex;
 }
 
-function changeControlPosition(position) {
-  const controlPositions = document.getElementById('control-positions');
-  const controlChildrenList = controlPositions.querySelectorAll("*");
+function changeControlPosition(currentPosition, previousPosition) {
+  const controlPositionsElement = document.getElementById('control-positions');
+  const controlChildrenList = controlPositionsElement.querySelectorAll("*");
 
-  const currentControlPosition = controlChildrenList[position] || controlChildrenList[0];
-  currentControlPosition.classList.add('current');
+  const lastPosition = 4;
+  const firstPosition = 0;
 
-  if (position >= 5) {
-    const previousControlPosition = controlChildrenList[4];
-    previousControlPosition.classList.remove('current');
-  } else {
-    const previousControlPosition = controlChildrenList[position - 1];
-    previousControlPosition.classList.remove('current');
+  const controlPositions = {
+    current: controlChildrenList[lastPosition],
+    previous: controlChildrenList[firstPosition]
+  };
+
+  if (currentPosition >= firstPosition) {
+    controlPositions.current = controlChildrenList[currentPosition] || controlChildrenList[firstPosition];
+    controlPositions.previous = controlChildrenList[previousPosition]
   }
 
+  controlPositions.current.classList.add('current');
+  controlPositions.previous.classList.remove('current');
+}
+
+function restartTime() {
+  clearInterval(timer);
+  timer = window.setInterval(nextImg, 5000);
 }

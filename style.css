@@ -103,6 +103,12 @@ header .text {
   height: 15%;
   border-radius: 100% 0 0 100%;
   margin-right: 10px;
+  cursor: pointer;
+}
+
+.slider-container .back:hover {
+  transform: scale(1.2);
+  transition: transform 150ms;
 }
 
 .slider-container .next {
@@ -114,6 +120,12 @@ header .text {
   height: 15%;
   border-radius: 0 100% 100% 0;
   margin-left: 10px;
+  cursor: pointer;
+}
+
+.slider-container .next:hover {
+  transform: scale(1.2);
+  transition: transform 150ms;
 }
 
 .slider-container .control-positions {
