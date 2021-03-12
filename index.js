@@ -12,6 +12,15 @@ backButton.addEventListener('click', () => {
   restartTime();
 });
 
+const controlPositions = document.getElementById('control-positions');
+controlPositions.addEventListener('click', (event) => {
+  if (event.target.id != 'control-positions') {
+    const controlItems = Array.from(controlPositions.querySelectorAll('*'));
+    controlPosition(controlItems, event);
+    restartTime();
+  }
+});
+
 function nextImg() {
   const img = getImage();
   const nextImg = img.id + 1;
@@ -38,6 +47,21 @@ function previousImg() {
   }
 
   changeControlPosition(previousImg, previousImg + 1);
+}
+
+function controlPosition(array, event) {
+  array.forEach(element => {
+    element.classList.remove('current')
+  });
+
+  const itemTarget = event.target.id;
+  const itemFound = array.find(item => item.id == itemTarget);
+  itemFound.classList.add('current');
+
+  const nextImg = array.indexOf(itemFound);
+
+  const img = getImage();
+  img.element.style.backgroundImage = `url(img/${nextImg}.jpg)`;
 }
 
 function getImage() {
